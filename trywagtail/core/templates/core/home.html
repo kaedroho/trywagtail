@@ -1,0 +1,10 @@
+<h1>Try wagtail!</h1>
+
+<p>Pick an image!</p>
+
+<h2>Images</h2>
+<ul>
+    {% for image in images %}
+        <li><a href="{% url 'use_image' image.id %}">{{ image.docker_image_name }}</a></li>
+    {% endfor %}
+</ul>
