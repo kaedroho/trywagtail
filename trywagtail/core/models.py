@@ -25,6 +25,7 @@ def find_best_port():
 
 
 class Image(models.Model):
+    display_name = models.CharField(max_length=255)
     docker_image_name = models.CharField(max_length=255)
 
     def create_container(self):
