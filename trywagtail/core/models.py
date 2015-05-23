@@ -5,9 +5,15 @@ from django.core.urlresolvers import reverse
 from docker.client import Client
 from docker.utils import kwargs_from_env, create_host_config
 
+from redis import StrictRedis
+
 
 def docker_client():
     return Client(**kwargs_from_env())
+
+
+def redis_client():
+    return StrictRedis()
 
 
 def find_best_port():
@@ -58,6 +64,13 @@ class Container(models.Model):
         docker = docker_client()
         docker.start(self.docker_container_id)
 
+        redis = redis_client()
+        redis.hset(
+            'trywagtail_routes',
+            'trywagtail-%d.kaed.uk' % self.id,
+            'http://localhost:%d' % self.docker_container_port,
+        )
+
         self.docker_container_started = True
         self.save(update_fields=['docker_container_started'])
 
@@ -65,17 +78,24 @@ class Container(models.Model):
         if not self.docker_container_started:
             return
 
+        redis = redis_client()
+        redis.hdel(
+            'trywagtail_routes',
+            'trywagtail-%d.kaed.uk' % self.id,
+        )
+
         docker = docker_client()
         docker.stop(self.docker_container_id)
 
         self.docker_container_started = False
         self.save(update_fields=['docker_container_started'])
 
-        pass
-
     def destroy(self):
         if not self.docker_container_exists:
             return
+
+        if self.docker_container_started:
+            self.stop()
 
         docker = docker_client()
         docker.remove_container(self.docker_container_id, force=True)

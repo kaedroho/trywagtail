@@ -1,0 +1,16 @@
+{
+  "name": "trywagtail-router",
+  "version": "1.0.0",
+  "description": "",
+  "main": "router.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "commander": "^2.8.1",
+    "http-proxy": "^1.11.1",
+    "redis": "^0.12.1"
+  }
+}
