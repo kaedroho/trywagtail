@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.core.urlresolvers import reverse
 
 from docker.client import Client
 from docker.utils import kwargs_from_env, create_host_config
@@ -55,7 +54,7 @@ class Container(models.Model):
     docker_container_port = models.PositiveIntegerField()
 
     def url(self, path='/'):
-        return reverse('serve', args=(self.id, path))
+        return 'http://trywagtail-%d.kaed.uk' % self.id
 
     def start(self):
         if self.docker_container_started:
