@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 from docker.client import Client
 from docker.utils import kwargs_from_env, create_host_config
@@ -16,7 +17,8 @@ def redis_client():
 
 
 def find_best_port():
-    ports = set(range(8000, 9000))
+    port_range = getattr(settings, 'TRYWAGTAIL_CONTAINER_PORT_RANGE', (8000, 9000))
+    ports = set(range(port_range[0], port_range[1]))
     used_ports = set(Container.objects.filter(docker_container_exists=True).values_list('docker_container_port', flat=True))
 
     return min(ports - used_ports)
