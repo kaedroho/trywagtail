@@ -13,7 +13,12 @@ def home(request):
 def use_image(request, image_id):
     image = get_object_or_404(models.Image, id=image_id)
 
-    container = image.create_container()
-    container.start()
+    if request.method == 'POST':
+        container = image.create_container()
+        container.start()
 
-    return redirect(container.url())
+        return redirect(container.url())
+
+    return render(request, 'core/use.html', {
+        'image': image,
+    })

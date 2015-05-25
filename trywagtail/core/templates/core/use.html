@@ -1,0 +1,10 @@
+<h1>Try wagtail!</h1>
+
+<h2>{{ image.display_name }}</h2>
+
+<p>Click the "Go!" button below to start. The box will be shutdown after 1 hour.</p>
+
+<form action="{% url 'use_image' image.id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Go!">
+</form>
